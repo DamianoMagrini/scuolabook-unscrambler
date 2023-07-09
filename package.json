@@ -1,0 +1,18 @@
+{
+	"private": true,
+	"type": "module",
+	"name": "scuolabook-unscrambler",
+	"description": "A tiny script to make PDFs extracted from Scuolabook readable with other programs.",
+	"version": "1.0.0",
+	"author": "Damiano Magrini <damiano.magrini@gmail.com>",
+	"license": "CC-BY-NC-SA-4.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DamianoMagrini/scuolabook-unscrambler.git"
+	},
+	"main": "main.js",
+	"scripts": {
+		"start": "node .",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	}
+}
