@@ -2,8 +2,10 @@ import { readFileSync, writeFileSync } from 'fs';
 
 // Matches the scrambled number of the /Pages object
 const pagesObjRegexGroupIndex = /(?<=\n)(\d{8,10})(?= 0 obj\r\n<< \/Type \/Pages \/Kids )/;
-// Matches the true number of the /Pages object, i.e. the parent of the first /Page object it finds
-const firstPageIndexRegexGroupPagesIndex = /(?<=<< \/Type \/Page.+\/Parent )(\d+)(?= 0 R)/;
+// Matches the true number of the /Pages object, i.e. the parent of the first /Page object it
+// finds. Note that PDF syntax leaves some freedom in terms of white space, so this regex was
+// updated to consider (hopefully) all formatting possibilities.
+const firstPageIndexRegexGroupPagesIndex = /(?<=<< ?\/Type ?\/Page[\s\S]+?\/Parent )(\d+)(?= 0 R)/;
 
 // Matches all the scrambled object numbers and xref byte indices
 const objIndexRegex = /(?<=\n)(\d{8,10})(?= 0 obj)|(?<=\n)(\d{10})(?=  00000 n)/g;
