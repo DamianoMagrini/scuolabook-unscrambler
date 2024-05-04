@@ -4,13 +4,13 @@ A tiny script to make PDFs extracted from Scuolabook readable with other program
 
 ## Usage
 
-Requirement: Any recent version of Node.js --- both the LTS and Current versions will work.
+Requirement: Any recent version of Node.js &mdash; both the LTS and Current versions will work.
 
 1. After activating your book, install the desktop Scuolabook app and download the book.
 2. Copy the book's `.pdp` file somewhere and rename it to `.pdf`. If you're on Windows, you can find it in `C:\Users\[username]\.scuolabook\[your email]\books\[book directory]`. This should be similar in other OSs once you find the `.scuolabook` folder.
-3. Open a terminal in this folder and type `node . [path to the PDF file]`.
+3. Open a terminal in the folder with the script and type `node . [path to the PDF file]`.
 
-If everything went smoothy, in a matter of instants your PDF will have been unscrambled and you'll be able to open it using any application. Otherwise, feel free to [open an issue](https://github.com/DamianoMagrini/scuolabook-unscrambler/issues/new), and I'll try to look into it.
+If everything went smoothly, in a matter of instants your PDF will have been unscrambled and you'll be able to open it using any application. Otherwise, feel free to [open an issue](https://github.com/DamianoMagrini/scuolabook-unscrambler/issues/new), and I'll try to look into it.
 
 ## Background and functioning
 
@@ -23,7 +23,7 @@ TIM Scuolabook is a third-party platform that hosts eBooks for several Italian p
 
 While another tool already exists to download the images from the web app and stitch them into a PDF, the result is unsatisfactory: too large and low-resolution, and no selectable text.
 
-The "PDP" files are indeed just PDFs, but they slightly scrambled up. PDF files, in general, are composed (among other things) of a series of "objects" which can reference one another (by their object number/id) and, after the objects, a "cross-reference table" (xref) with the indices (in bytes) of all the objects contained in the file in order of object number, to make random access faster. I.e., if the computer wants to read object 15, instead of going through the whole file until it finds object 15, it goes to the 15th line of the xref table to locate the object's position in the file, and then goes directly to read it.
+The "PDP" files are indeed just PDFs, but they are slightly scrambled up. PDF files, in general, are composed (among other things) of a series of "objects" which can reference one another (by their object number/id) and, after the objects, a "cross-reference table" (xref) with the indices (in bytes) of all the objects contained in the file in order of object number, to make random access faster. I.e., if the computer wants to read object 15, instead of going through the whole file until it finds object 15, it goes to the 15th line of the xref table to locate the object's position in the file, and then goes directly to read it.
 
 Here's an example of a PDF object:
 
@@ -41,7 +41,7 @@ Where 1 is the object number, 0 is the "generation number" (no, I don't know wha
 endobj
 ```
 
-It's the same, but it occupies a different number of bytes. And, for example, in the xref table we might expect this one to be the first entry:
+It's the same, but it occupies a different number of bytes. And for example, in the xref table we might expect this one to be the first entry:
 
 ```
 0000000025 00000 n
@@ -56,7 +56,7 @@ Which means that we find the first object (i.e., object 1) at byte 25 in the PDF
 - `n` (or `f` if the object is not used in the file, meaning "free"),
 - 2-character end-of-line, the usual CRLF.
 
-What Scuolabook does is it just XORs both the object numbers and byte indices with a specific "key", a number with 8 to 10 digits. So, if for example the key is `272665865`, then
+What Scuolabook does is it just XORs both the object numbers and byte indices with a specific "key", a number with 8 to 10 digits. So, if say the key is `272665865`, then
 
 ```
 000001117 0 obj
@@ -86,7 +86,7 @@ will become
 
 And since XOR is symmetric, once we identify the key, we can just re-apply it to the scrambled numbers to unscramble them.
 
-How do we find the key? I was not able to find it written anywhere and it appears to be specific for each book, so I observed that, when an object is referenced by another object, its true number is used --- if we manage to associate an object number with an object, we can find the key and unscramble the PDF.
+How do we find the key? I was not able to find it written anywhere and it appears to be specific for each book, so I observed that, when an object is referenced by another object, its true number is used &mdash; if we manage to associate an object number with an object, we can find the key and unscramble the PDF.
 
 There are two kinds of objects that are always present in a PDF file: a `/Pages` object referencing all the pages as its children (or `/Kids`), and many `/Page` objects referencing the `/Pages` object as their `/Parent`. For example, we might see something like this:
 
